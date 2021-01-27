@@ -1,5 +1,5 @@
 """Modfile"""
 
-from src.init import init
+import init
 
-init()
+init.run()

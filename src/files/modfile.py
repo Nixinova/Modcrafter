@@ -3,9 +3,10 @@
 def default():
     """Default Modfile contents"""
 
-    return """
-        name: My Mod
-        author: Nixinova
-        version: 1.0
-        
-    """
+    content = {
+        "name": "My Mod",
+        "author": "Myself",
+        "version": "1.0"
+    }
+    
+    return content

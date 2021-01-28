@@ -16,8 +16,17 @@ def configure():
     mods_toml = FOLDER + 'mods.toml'
     mods_toml_temp = mods_toml + '.temp'
 
+    license_msg = modfile.get('license') or 'Unspecified'
+    modid = modfile.get('modid')
+    author = modfile.get('author')
+    bugs = modfile.get('bugs')
+    website = modfile.get('website')
+    logo = modfile.get('logo')
+    credit = modfile.get('credits')
+
     with open(mods_toml, 'r') as read:
         with open(mods_toml_temp, 'w') as write:
+
             for ln in read:
 
                 if re.search(r'^\s*#', ln):
@@ -27,14 +36,6 @@ def configure():
                     break
 
                 ln = re.sub(r'\s*#.+$', '', ln)
-
-                license_msg = modfile.get('license') or 'Unspecified'
-                modid = modfile.get('id') or modfile.get('name').lower().replace(' ', '')
-                author = modfile.get('author')
-                bugs = modfile.get('bugs')
-                website = modfile.get('website')
-                logo = modfile.get('logo')
-                credit = modfile.get('credits')
 
                 ln = re.sub(r'(^license=).+$', rf'\1"{license_msg}"', ln)
                 ln = re.sub(r'(^modId=).+', rf'\1"{modid}"', ln)
@@ -46,7 +47,8 @@ def configure():
 
                 if not re.match(r'^\s*$', ln):
                     write.write(ln)
-            write.write('description=' + f'"""\n{modfile.get("description")}\n"""')
+
+            write.write('description=' + f'"""\012{modfile.get("description")}\012"""')
 
     os.remove(mods_toml)
     os.rename(mods_toml_temp, mods_toml)

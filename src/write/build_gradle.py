@@ -1,11 +1,10 @@
 """Modify build.gradle"""
 
+from globals import *
 import os
 import re
 
 import modfile
-
-OUTPUT_FOLDER = 'gen/lib/'
 
 
 def configure():
@@ -26,7 +25,7 @@ def configure():
                 line = re.sub(r"(?<=^version = )'1.0'$", f"'{modfile.get('version')}'", line)
                 line = re.sub(r"(?<=^group = ).+$", f"'{modfile.get('package')}'", line)
                 line = re.sub(r"(?<=^archivesBaseName = ).+$", f"'{modfile.get('modid')}'", line)
-                
+
                 line = line.replace('examplemod', modfile.get('modid'))
 
                 gradle_write.write(line + '\n')

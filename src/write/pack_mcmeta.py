@@ -3,9 +3,8 @@
 import os
 import re
 
+from globals import *
 import modfile
-
-OUTPUT_FOLDER = 'gen/lib/'
 
 
 def configure():

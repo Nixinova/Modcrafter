@@ -2,6 +2,8 @@ package $PACKAGE;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.SoundType;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.block.material.Material;
@@ -26,28 +28,59 @@ public class Main {
         ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
-    public static void addBlock(String name, Material material) {
-        RegistryObject<Block> newBlock = BLOCKS.register(
+    public static Block addBlock(
+        String name,
+        Material material,
+        float hardness,
+        SoundType sound,
+        int light
+    ) {
+        Block newBlock = new Block(Block.Properties
+            .create(material)
+            .hardnessAndResistance(hardness)
+            //#.lightValue(light)
+            .sound(sound)
+            .notSolid()
+        );
+        BLOCKS.register(name, () -> newBlock);
+        return newBlock;
+    }
+
+    public static void addBlockItem(
+        String name,
+        Material material,
+        float hardness,
+        SoundType sound,
+        int light,
+        int stackSize,
+        ItemGroup group
+    ) {
+        Block newBlock = addBlock(name, material, hardness, sound, light);
+        RegistryObject<Item> itemBlock = ITEMS.register(
             name,
-            () -> new Block(Block.Properties.create(material))
+            () -> new BlockItem(newBlock, new Item.Properties().maxStackSize(stackSize).group(group))
         );
     }
 
-    public static void addItem(String name, ItemGroup group) {
+    public static void addItem(
+        String name,
+        int stackSize,
+        ItemGroup group
+    ) {
         RegistryObject<Item> newItem = ITEMS.register(
             name,
-            () -> new Item(new Item.Properties().group(group))
+            () -> new Item(new Item.Properties().maxStackSize(stackSize).group(group))
         );
     }
 
     // List of blocks
     public static void addBlocks() {
-        addBlock("a_custom_block", Material.ROCK);
+        //#$BLOCKS
     }
 
     // List of items
     public static void addItems() {
-        addItem("a_custom_item", ItemGroup.MATERIALS);
+        //#$ITEMS
     }
 
 }

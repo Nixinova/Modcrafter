@@ -2,10 +2,8 @@
 
 import os
 
+from globals import *
 import modfile
-
-OUTPUT_FOLDER = 'gen/lib/'
-JAR_FOLDER = 'gen/jars/'
 
 
 def run():
@@ -17,11 +15,13 @@ def run():
     print(f"Compiling {filename}...")
     os.system(f'cd {OUTPUT_FOLDER} && gradlew build')
 
-    if os.path.exists(compiled_file):
+    try:
         print(f"Successfully compiled {filename}")
         if not os.path.exists(JAR_FOLDER):
             os.mkdir(JAR_FOLDER)
         os.rename(compiled_file, JAR_FOLDER + filename)
         print("Find file in " + JAR_FOLDER + filename)
-    else:
+    except FileExistsError:
+        print(f"Version {modfile.get('version')} already exists. Please change the version number and try again, or set the `wip` key to `true` to generate automatic version IDs.")
+    except:
         print("Compilation failed.")

@@ -5,16 +5,15 @@ import zipfile
 import shutil
 import requests
 
+from globals import *
 import modfile
-
-OUTPUT_FOLDER = 'gen/lib/'
 
 
 def download():
     """Downloads and extracts MDK"""
 
     prefix = 'https://files.minecraftforge.net/maven/net/minecraftforge/forge/'
-    version = modfile.get('mcver') + '-' + modfile.get('forgever')
+    version = modfile.get('minecraft') + '-' + modfile.get('forge')
     url = prefix + version + '/forge-' + version + '-mdk.zip'
     zip_output = 'output.zip'
 
@@ -24,9 +23,13 @@ def download():
         file.write(req.content)
 
     # Extract MDK
-    with zipfile.ZipFile(zip_output, 'r') as file:
-        file.extractall(OUTPUT_FOLDER)
-    os.remove(zip_output)
+    try:
+        with zipfile.ZipFile(zip_output, 'r') as file:
+            shutil.rmtree(OUTPUT_FOLDER)
+            file.extractall(OUTPUT_FOLDER)
+        os.remove(zip_output)
+    except:
+        print("Extraction failed. Please try again.")
 
     cleanup()
 

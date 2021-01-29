@@ -3,9 +3,8 @@
 import os
 import re
 
+from globals import *
 import modfile
-
-OUTPUT_FOLDER = 'gen/lib/'
 
 
 def configure():
@@ -48,7 +47,7 @@ def configure():
                 if not re.match(r'^\s*$', ln):
                     write.write(ln)
 
-            write.write('description=' + f'"""\012{modfile.get("description")}\012"""')
+            write.write('description=' + f'"""{modfile.get("description")}"""')
 
     os.remove(mods_toml)
     os.rename(mods_toml_temp, mods_toml)

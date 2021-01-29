@@ -1,0 +1,17 @@
+[MASTER]
+init-hook="from pylint.config import find_pylintrc; import os, sys; sys.path.append(os.path.dirname(find_pylintrc()))"
+
+[MESSAGES CONTROL]
+disable=
+    bare-except,
+    cell-var-from-loop,
+    global-at-module-level,
+    global-statement,
+    invalid-name,
+    redefined-outer-name,
+    report-unbound-variable,
+    unused-wildcard-import,
+    wildcard-import
+
+[FORMAT]
+max-line-length=200

@@ -1,0 +1,48 @@
+# Modcrafter.yml template
+
+1_versions:
+  1_minecraft: 1.16.4
+  2_forge: 35.1.4
+
+2_mod:
+  1_name: My Mod
+  2_id: mymod
+  2_version: v1.0
+  3_author: Myself
+  3_description: A simple mod.
+  license: All rights reserved
+  website: https://example.com
+
+blocks:
+
+  example_block:
+    1_name: Example Block
+    2_itemForm: true
+    3_textures: auto
+    hardness: 2.5
+    inventoryTab: misc
+    material: wood
+    resistance: 6
+    solid: true
+    sound: wood
+    stackSize: 16
+
+  world_only_block:
+    1_name: Block Without Item Form
+    2_itemForm: false
+    3_textures:
+      bottom: $name_bottom
+      top: $name_top
+    hardness: 4.8
+    material: rock
+    resistance: 12
+    solid: true
+    sound: metal
+
+items:
+
+  example_item:
+    1_name: Example Item
+    2_textures: auto
+    inventoryTab: misc
+    stackSize: 16

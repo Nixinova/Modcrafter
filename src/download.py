@@ -23,32 +23,42 @@ def download():
         file.write(req.content)
 
     # Extract MDK
+    shutil.rmtree(OUTPUT_FOLDER, ignore_errors=True)
     try:
         with zipfile.ZipFile(zip_output, 'r') as file:
-            shutil.rmtree(OUTPUT_FOLDER)
             file.extractall(OUTPUT_FOLDER)
-        os.remove(zip_output)
     except:
         print("Extraction failed. Please try again.")
+    os.remove(zip_output)
 
-    cleanup()
+    try:
+        cleanup()
+    except:
+        print("Folder cleanup failed.")
 
 
 def cleanup():
     """Cleans up output folder"""
 
     # Configure gitfiles
+    # with open(OUTPUT_FOLDER + '.gitattributes', 'w') as file:
+    #    file.write('src/generated/**/*.json text eol=lf')
     os.remove(OUTPUT_FOLDER + '.gitattributes')
     with open(OUTPUT_FOLDER + '.gitignore', 'w') as file:
-        file.write('.gradle\nbuild\ngradle\nmdk_info\n')
+        file.write('.gradle/\nbuild/\nlogs/\nmdk_info/\n')
 
     # Move Forge metainfo into folder
     mdk_info = ['changelog.txt', 'CREDITS.txt', 'README.txt', 'LICENSE.txt']
-    if os.path.exists(OUTPUT_FOLDER + 'mdk_info'):
-        shutil.rmtree(OUTPUT_FOLDER + 'mdk_info')
+    shutil.rmtree(OUTPUT_FOLDER + 'mdk_info', ignore_errors=True)
     os.mkdir(OUTPUT_FOLDER + 'mdk_info')
     for file in mdk_info:
         os.rename(OUTPUT_FOLDER + file, OUTPUT_FOLDER + 'mdk_info/' + file)
     os.rename(OUTPUT_FOLDER + 'src/main/java/com/example/examplemod/ExampleMod.java',
               OUTPUT_FOLDER + 'mdk_info/ExampleMod.java')
     shutil.rmtree(OUTPUT_FOLDER + 'src/main/java/com')
+
+
+# make setup
+if __name__ == '__main__':
+    modfile.read()
+    download()

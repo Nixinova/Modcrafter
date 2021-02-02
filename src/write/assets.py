@@ -47,7 +47,7 @@ def lang():
         content[f'block.{MODID}.{name}'] = f'{data["name"] or name}'
 
     with open(langfile, 'w') as file:
-        file.write(json.dumps(content, indent=2))
+        file.write(json.dumps(content, indent=4))
 
 
 def blockstates():
@@ -57,34 +57,34 @@ def blockstates():
     os.makedirs(BLOCKSTATES_FOLDER, exist_ok=True)
 
     for name, _ in BLOCKS.items():
-        content = {"variants": {"normal": {"model": f"{MODID}:{name}"}}}
+        #content = {"forge_marker": 1, "variants": {"normal": [{"textures": {"all": f"{MODID}:block/{name}"}, "model": "cube_all", "uvlock": True}]}}
+        content = {"variants": {"": {"model": f"{MODID}:block/{name}"}}}
         with open(BLOCKSTATES_FOLDER + name + '.json', 'w') as file:
-            file.write(json.dumps(content, indent=2))
+            file.write(json.dumps(content, indent=4))
 
 
 def models():
     """Create models"""
 
     MODELS_FOLDER = ASSETS_FOLDER + 'models/'
-    os.makedirs(MODELS_FOLDER, exist_ok=True)
     os.makedirs(MODELS_FOLDER + 'block/', exist_ok=True)
     os.makedirs(MODELS_FOLDER + 'item/', exist_ok=True)
 
     for name, _ in ITEMS.items():
-        content = {"parent": "item/generated", "textures": {"layer0": f"{MODID}:{name}"}}
+        content = {"parent": "minecraft:item/generated", "textures": {"layer0": f"{MODID}:item/{name}"}}
         with open(MODELS_FOLDER + 'item/' + name + '.json', 'w') as file:
-            file.write(json.dumps(content, indent=2))
+            file.write(json.dumps(content, indent=4))
 
     for name, data in BLOCKS.items():
         content = {}
         textures = data["textures"]
-        default = f'{MODID}:{name}'
+        default = f'{MODID}:block/{name}'
 
         if isinstance(textures, str):
-            texture = default if textures == 'auto' else f'{textures}'
-            content = {"parent": "block/cube_all", "textures": {"all": texture}}
+            texture = default if textures == 'auto' else textures
+            content = {"parent": "minecraft:block/cube_all", "textures": {"all": texture}}
         else:
-            nameReplacement = MODID + ':' + name
+            nameReplacement = f'{MODID}:block/{name}'
 
             def setTexture(side):
                 if side in textures:
@@ -102,7 +102,9 @@ def models():
             }}
 
         with open(MODELS_FOLDER + 'block/' + name + '.json', 'w') as file:
-            file.write(json.dumps(content, indent=2))
+            file.write(json.dumps(content, indent=4))
+        with open(MODELS_FOLDER + 'item/' + name + '.json', 'w') as file:
+            file.write(json.dumps({"parent": f"{MODID}:block/{name}"}, indent=4))
 
 
 def textures():

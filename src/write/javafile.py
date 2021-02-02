@@ -1,7 +1,6 @@
 """Write to Java file"""
 
 import os
-import re
 
 from globals import *
 import modfile
@@ -40,49 +39,41 @@ def write():
     blocksContent = '\n\t\t'
     itemsContent = '\n\t\t'
 
+    def getKey(data, key):
+        return key in data and str(data[key]) or ''
+
     # Add items
     for item, data in ITEMS.items():
 
-        stackSize = data["stackSize"]
-        tab = data["inventoryTab"]
+        stackSize = getKey(data, "stackSize")
+        tab = getKey(data, "inventoryTab").upper()
 
-        if not tab.upper() in existingTabs:
-            tab = 'misc'
-        tab = 'ItemGroup.' + tab.upper()
+        tab = 'ItemGroup.' + (tab in existingTabs and tab or 'MISC')
 
         itemsContent += f'addItem("{item}", {stackSize}, {tab});\n\t\t'
 
     # Add blocks and block-items
     for block, data in BLOCKS.items():
 
-        material = data["material"]
-        hardness = data["hardness"]
-        sound = data["sound"]
-        light = data["light"]
+        itemForm = getKey(data, "itemForm").lower()
+        solid = getKey(data, "solid").lower()
+        material = getKey(data, "material").upper()
+        hardness = getKey(data, "hardness")
+        resistance = getKey(data, "resistance")
+        sound = getKey(data, "sound").upper()
+        stackSize = itemForm and getKey(data, "stackSize") or 0
+        tab = itemForm and getKey(data, "inventoryTab").upper() or 'null'
 
-        if not sound.upper() in soundTypes:
-            sound = 'metal'
-        sound = 'SoundType.' + sound.upper()
+        sound = 'SoundType.' + (sound in soundTypes and sound or 'METAL')
+        material = 'Material.' + (material in validMaterials and material or 'ROCK')
+        tab = itemForm and 'ItemGroup.' + (tab in existingTabs and tab or 'MISC') or 'null'
 
-        if not material.upper() in validMaterials:
-            material = 'ROCK'
-        material = 'Material.' + material.upper()
-
-        commonArgs = f'"{block}", {material}, {hardness}f, {sound}, {light}'
-
-        if data["itemForm"]:
-            stackSize = data["stackSize"]
-            tab = data["inventoryTab"]
-            if not tab.upper() in existingTabs:
-                tab = 'misc'
-            tab = 'ItemGroup.' + tab.upper()
-            blocksContent += f'addBlockItem({commonArgs}, {stackSize}, {tab});\n\t\t'
-        else:
-            blocksContent += f'addBlock({commonArgs});\n\t\t'
+        args = f'"{block}", {itemForm}, {solid}, {material}, {hardness}f, {resistance}f, {sound}, {stackSize}, {tab}'
+        blocksContent += f'addBlock({args});\n\t\t'
 
     # Read template
     fc = ''
-    with open('src/files/template.java', 'r') as file:
+    with open('src/static/Main.java', 'r') as file:
         fc = file.read()
 
     # Replacements
@@ -90,7 +81,6 @@ def write():
     fc = fc.replace('$MODID', modfile.get('modid'))
     fc = fc.replace('$BLOCKS', blocksContent)
     fc = fc.replace('$ITEMS', itemsContent)
-    fc = re.sub(r'^\s*\/\/#.+$', '', fc)
 
     # Write to Java file
     with open(FOLDER + 'Main.java', 'w') as file:

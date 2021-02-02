@@ -1,12 +1,13 @@
 package $PACKAGE;
 
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.block.material.Material;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -24,42 +25,39 @@ public class Main {
     public Main() {
         addBlocks();
         addItems();
-        BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
-    public static Block addBlock(
+    public static void addBlock(
         String name,
+        boolean itemForm,
+        boolean solid,
         Material material,
         float hardness,
+        float resistance,
         SoundType sound,
-        int light
+        int stackSize, // blockItem only
+        ItemGroup group // blockItem only
     ) {
-        Block newBlock = new Block(Block.Properties
+        AbstractBlock.Properties blockProps = AbstractBlock.Properties
             .create(material)
-            .hardnessAndResistance(hardness)
-            //#.lightValue(light)
+            .hardnessAndResistance(hardness, resistance)
             .sound(sound)
-            .notSolid()
-        );
-        BLOCKS.register(name, () -> newBlock);
-        return newBlock;
-    }
+            ;
+        if (!solid) blockProps = blockProps.notSolid();
 
-    public static void addBlockItem(
-        String name,
-        Material material,
-        float hardness,
-        SoundType sound,
-        int light,
-        int stackSize,
-        ItemGroup group
-    ) {
-        Block newBlock = addBlock(name, material, hardness, sound, light);
-        RegistryObject<Item> itemBlock = ITEMS.register(
-            name,
-            () -> new BlockItem(newBlock, new Item.Properties().maxStackSize(stackSize).group(group))
-        );
+        Block block = new Block(blockProps);
+
+        Item.Properties itemProps = new Item.Properties()
+            .maxStackSize(stackSize)
+            .group(group)
+            ;
+
+        BlockItem blockItem = new BlockItem(block, itemProps);
+
+        BLOCKS.register(name, () -> block);
+        if (itemForm) {
+            ITEMS.register(name, () -> blockItem);
+        }
     }
 
     public static void addItem(
@@ -75,12 +73,14 @@ public class Main {
 
     // List of blocks
     public static void addBlocks() {
-        //#$BLOCKS
+        //Blocks:$BLOCKS
+        BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
     // List of items
     public static void addItems() {
-        //#$ITEMS
+        //Items:$ITEMS
+        ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
 }

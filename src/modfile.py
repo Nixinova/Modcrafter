@@ -12,58 +12,8 @@ modfile_content = {}
 def default():
     """Default Modfile contents"""
 
-    content = {
-        "versions": {
-            "_1_minecraft": "1.16.1",
-            "_2_forge": "32.0.108"
-        },
-        "mod": {
-            "_1_name": "My Mod",
-            "_2_id": "mymod",
-            "author": "Myself",
-            "version": "v1.0",
-            "wip": False,
-            "description": "A simple mod.",
-            # "license": "All rights reserved",
-            # "bugs": "https://github.com/myself/mymod/issues",
-            # "website": "https://example.com",
-        },
-        "blocks": {
-            "example_block": {
-                "_1_name": "Example Block",
-                "_2_itemForm": True,
-                "_3_textures": "auto",
-                "material": "wood",
-                "hardness": 2.5,
-                "sound": "wood",
-                "light": 1,
-                "stackSize": 16,
-                "inventoryTab": "misc"
-            },
-            "world_only_block": {
-                "_1_name": "Block Without Item Form",
-                "_2_itemForm": False,
-                "_3_textures": {
-                    "top": "$name_top",
-                    "bottom": "$name_bottom"
-                },
-                "material": "rock",
-                "sound": "metal",
-                "light": 6,
-                "hardness": 4.8
-            }
-        },
-        "items": {
-            "example_item": {
-                "_1_name": "Example Item",
-                "_3_textures": "auto",
-                "stackSize": 16,
-                "inventoryTab": "misc"
-            }
-        }
-    }
-
-    return content
+    with open('src/static/Modcrafter.yml', 'r') as file:
+        return yaml.safe_load(file)
 
 
 def read():
@@ -82,9 +32,9 @@ def read():
                 modfile_content = file_content
     else:
         with open(modfilename_temp, 'w') as file:
-            yaml.dump({"versions": modfile_content["versions"]}, file)
+            yaml.dump({"versions": modfile_content["1_versions"]}, file)
             file.write('\n')
-            yaml.dump({"mod": modfile_content["mod"]}, file)
+            yaml.dump({"mod": modfile_content["2_mod"]}, file)
             file.write('\n')
             yaml.dump({"blocks": modfile_content["blocks"]}, file)
             file.write('\n')
@@ -92,7 +42,7 @@ def read():
         with open(modfilename_temp, 'r') as file:
             with open(modfilename, 'w') as write:
                 for ln in file:
-                    write.write(re.sub(r'_\d_', '', ln))
+                    write.write(re.sub(r'\d_', '', ln))
         os.remove(modfilename_temp)
 
     return modfile_content
@@ -101,20 +51,25 @@ def read():
 def get(item):
     """Retrieves a config entry with edge guards"""
 
+    result = ''
+
     if item == 'modid':
         return get('id') or get('name').lower().replace(' ', '')
 
     if item == 'package':
-        authorID = re.sub(r"[^\w\d]", '', get('author'))
-        return f"com.{authorID.lower()}.{get('modid').lower()}"
-
-    if item == 'version' and get('wip'):
-        return 'dev-' + str(int(time.time()))[-5:]
+        authorID = re.sub(r"[^\w\d]", '', get('author')).lower()
+        return f"src.{authorID}.{get('modid')}"
 
     for key in modfile_content:
         if key == item:
-            return modfile_content[key]
+            result = modfile_content[key]
         for subkey in modfile_content[key]:
             if subkey == item:
-                return modfile_content[key][item]
-    return ''
+                result = modfile_content[key][item]
+
+    if item == 'version':
+        if result == 'auto':
+            return 'dev-' + str(int(time.time()))[-5:]
+        return str(result)
+
+    return result

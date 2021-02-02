@@ -16,12 +16,17 @@ def run():
     os.system(f'cd {OUTPUT_FOLDER} && gradlew build')
 
     try:
-        print(f"Successfully compiled {filename}")
         if not os.path.exists(JAR_FOLDER):
             os.mkdir(JAR_FOLDER)
         os.rename(compiled_file, JAR_FOLDER + filename)
-        print("Find file in " + JAR_FOLDER + filename)
+        print("Successfully compiled " + filename)
+        print("Find file in ./" + JAR_FOLDER + filename)
     except FileExistsError:
         print(f"Version {modfile.get('version')} already exists. Please change the version number and try again, or set the `wip` key to `true` to generate automatic version IDs.")
     except:
         print("Compilation failed.")
+
+# make compile
+if __name__ == '__main__':
+    modfile.read()
+    run()

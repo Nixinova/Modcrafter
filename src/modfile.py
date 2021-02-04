@@ -5,47 +5,51 @@ import re
 import time
 import yaml
 
-global modfile_content
+from globals import *
+
+modfilename = 'Modcrafter.yml'
 modfile_content = {}
 
 
-def default():
+def default(raw):
     """Default Modfile contents"""
 
-    with open('src/static/Modcrafter.yml', 'r') as file:
-        return yaml.safe_load(file)
+    with open(STATIC_PATH + modfilename, 'r') as file:
+        yaml_content = ''.join(file.readlines())
+        global modfile_content
+        modfile_content = yaml.safe_load(yaml_content)
+        return raw and yaml_content or yaml.safe_load(yaml_content)
 
 
 def read():
     """Read Modfile contents"""
 
-    global modfile_content
-    modfile_content = default()
-
-    modfilename = 'Modcrafter.yml'
-    modfilename_temp = modfilename + '.temp'
+    default(False)
 
     if os.path.exists(modfilename):
         with open(modfilename, 'r') as file:
             file_content = yaml.safe_load(file)
             if file_content:
+                global modfile_content
                 modfile_content = file_content
     else:
-        with open(modfilename_temp, 'w') as file:
-            yaml.dump({"versions": modfile_content["1_versions"]}, file)
-            file.write('\n')
-            yaml.dump({"mod": modfile_content["2_mod"]}, file)
-            file.write('\n')
-            yaml.dump({"blocks": modfile_content["blocks"]}, file)
-            file.write('\n')
-            yaml.dump({"items": modfile_content["items"]}, file)
-        with open(modfilename_temp, 'r') as file:
-            with open(modfilename, 'w') as write:
-                for ln in file:
-                    write.write(re.sub(r'\d_', '', ln))
-        os.remove(modfilename_temp)
-
-    return modfile_content
+        # Initialise project
+        message = "Successfully initialised Modcrafter project.\nEdit Modcrafter.yml then run this EXE file again to compile to a JAR."
+        os.mkdir('content')
+        with open(modfilename, 'w') as file:
+            file.write(default(True))
+        with open('INITIALISED.info', 'w') as file:
+            file.write(message + '\nYou may delete this file.')
+        with open('.gitignore', 'r') as file:
+            file.write(
+                f"""
+                # Ignore Modcrafter output directory
+                {MAIN_FOLDER}
+                # Ignore author-facing info files
+                *.info
+                """
+            )
+        raise SystemExit(message)
 
 
 def get(item):
@@ -58,7 +62,7 @@ def get(item):
 
     if item == 'package':
         authorID = re.sub(r"[^\w\d]", '', get('author')).lower()
-        return f"src.{authorID}.{get('modid')}"
+        return f"mod.{authorID}.{get('modid')}"
 
     for key in modfile_content:
         if key == item:

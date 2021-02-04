@@ -1,24 +1,45 @@
-# Modcrafter.yml template
+## Modcrafter configuration file ##
 
-1_versions:
-  1_minecraft: 1.16.4
-  2_forge: 35.1.4
+# Format is YAML https://yaml.org
+# YAML is like JSON but without braces, commas and unncessary quotes
+# Comments start with hashes
+# Note that indentation is important
 
-2_mod:
-  1_name: My Mod
-  2_id: mymod
-  2_version: v1.0
-  3_author: Myself
-  3_description: A simple mod.
-  license: All rights reserved
-  website: https://example.com
+
+## Version information ##
+
+versions:
+  minecraft: 1.16.4
+  forge: 35.1.4
+
+## Mod information ##
+
+mod:
+  name: My Test Mod
+  id: mytestmod # must be unique
+  version: v1.0 # set to "auto" to use automatic IDs instead
+  author: Myself
+  description: |
+    Describe your mod here,
+    in as many lines as you need
+  #license: All rights reserved # optional
+  #website: https://example.com # optional
+  #bugs: https://github.com/example/mod/issues # optional
+
+## Blocks and items ##
+
+# Certain parameters require specific values
+# See https://gist.github.com/Nixinova/4427f3e749a9c9e6b0bc430abc33564e
 
 blocks:
 
+  # Add your mod blocks below
+  # Two example blocks have been filled out for you
+
   example_block:
-    1_name: Example Block
-    2_itemForm: true
-    3_textures: auto
+    name: Example Block
+    itemForm: true
+    textures: auto # single-textured cube
     hardness: 2.5
     inventoryTab: misc
     material: wood
@@ -28,9 +49,9 @@ blocks:
     stackSize: 16
 
   world_only_block:
-    1_name: Block Without Item Form
-    2_itemForm: false
-    3_textures:
+    name: Block Without Item Form
+    itemForm: false
+    textures: # `$name` refers to the above value of `name`
       bottom: $name_bottom
       top: $name_top
     hardness: 4.8
@@ -41,8 +62,11 @@ blocks:
 
 items:
 
+  # Add your mod items below
+  # An example item has been filled out for you
+
   example_item:
-    1_name: Example Item
-    2_textures: auto
+    name: Example Item
+    textures: auto # default 2D item
     inventoryTab: misc
     stackSize: 16

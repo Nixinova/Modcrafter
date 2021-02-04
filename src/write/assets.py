@@ -110,4 +110,5 @@ def models():
 def textures():
     """Copy over textures"""
 
-    shutil.copytree(TEXTURES_FOLDER, ASSETS_FOLDER + 'textures/', dirs_exist_ok=True)
+    if os.path.exists(TEXTURES_FOLDER):
+        shutil.copytree(TEXTURES_FOLDER, ASSETS_FOLDER + 'textures/', dirs_exist_ok=True)

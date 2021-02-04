@@ -1,5 +1,23 @@
-__pycache__
-.vscode
-content
-*.jar
+# Python
+__pycache__/
+
+# Editor
+.vscode/
+
+# Packages
+node_modules/
+
+# Modcrafter
+content/
 /Modcrafter.yml
+
+# Node
+package.json
+run.js
+
+# Compiled files
+/bin/build/
+/bin/dist/*.yml
+/bin/dist/*.info
+/bin/*.spec
+

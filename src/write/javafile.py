@@ -11,7 +11,7 @@ def write():
 
     PACKAGE = modfile.get('package')
     FOLDER = OUTPUT_FOLDER + 'src/main/java/' + PACKAGE.replace('.', '/') + '/'
-    os.makedirs(FOLDER)
+    os.makedirs(FOLDER, exist_ok=True)
 
     # Prepare blocks and items
 
@@ -73,7 +73,7 @@ def write():
 
     # Read template
     fc = ''
-    with open('src/static/Main.java', 'r') as file:
+    with open(STATIC_PATH + 'Main.java', 'r') as file:
         fc = file.read()
 
     # Replacements

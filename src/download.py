@@ -3,6 +3,7 @@
 import os
 import zipfile
 import shutil
+
 import requests
 
 from globals import *
@@ -19,16 +20,16 @@ def download():
 
     # Download MDK
     req = requests.get(url, allow_redirects=True)
+    if b"404 Not Found" in req.content:
+        error = f'Failed to download MDK version "{version}". This is most likely due to invalid configuration. Please try again.'
+        raise FileNotFoundError(error)
     with open(zip_output, 'wb') as file:
         file.write(req.content)
 
     # Extract MDK
     shutil.rmtree(OUTPUT_FOLDER, ignore_errors=True)
-    try:
-        with zipfile.ZipFile(zip_output, 'r') as file:
-            file.extractall(OUTPUT_FOLDER)
-    except:
-        print("Extraction failed. Please try again.")
+    with zipfile.ZipFile(zip_output, 'r') as file:
+        file.extractall(OUTPUT_FOLDER)
     os.remove(zip_output)
 
     try:

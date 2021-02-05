@@ -1,4 +1,4 @@
-"""Modfile configuration"""
+"""Mod configuration file"""
 
 import os
 import re
@@ -12,7 +12,7 @@ modfile_content = {}
 
 
 def default(raw):
-    """Default Modfile contents"""
+    """Default config contents"""
 
     with open(STATIC_PATH + modfilename, 'r') as file:
         yaml_content = ''.join(file.readlines())
@@ -22,7 +22,7 @@ def default(raw):
 
 
 def read():
-    """Read Modfile contents"""
+    """Read config contents"""
 
     default(False)
 
@@ -33,23 +33,29 @@ def read():
                 global modfile_content
                 modfile_content = file_content
     else:
-        # Initialise project
-        message = "Successfully initialised Modcrafter project.\nEdit Modcrafter.yml then run this EXE file again to compile to a JAR."
-        os.mkdir('content')
-        with open(modfilename, 'w') as file:
-            file.write(default(True))
-        with open('INITIALISED.info', 'w') as file:
-            file.write(message + '\nYou may delete this file.')
-        with open('.gitignore', 'r') as file:
-            file.write(
-                f"""
-                # Ignore Modcrafter output directory
-                {MAIN_FOLDER}
-                # Ignore author-facing info files
-                *.info
-                """
-            )
-        raise SystemExit(message)
+        init()
+
+
+def init():
+    """Initialise project"""
+
+    message = 'Successfully initialised Modcrafter project.\n'
+    message += 'Configure Modcrafter.yml then run this EXE file again to compile to a JAR.\n'
+    os.mkdir(MAIN_FOLDER)
+    os.mkdir(TEXTURES_FOLDER)
+    with open(modfilename, 'w') as file:
+        file.write(default(True))
+    with open('INITIALISED.info', 'w') as file:
+        file.write(message + 'You may delete this file.\n')
+    with open('.gitignore', 'r+') as file:
+        file.read()
+        file.write(
+            '\n' '# Ignore Modcrafter output directory'
+            '\n' f'{MAIN_FOLDER}'
+            '\n' '# Ignore info files'
+            '\n' '*.info'
+        )
+    raise SystemExit(message)
 
 
 def get(item):

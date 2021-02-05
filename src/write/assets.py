@@ -88,7 +88,7 @@ def models():
 
             def setTexture(side):
                 if side in textures:
-                    return textures[side].replace('$name', nameReplacement)
+                    return textures[side].replace('$id', nameReplacement)
                 return default
 
             content = {"parent": "block/cube", "textures": {

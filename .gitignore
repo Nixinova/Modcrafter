@@ -3,21 +3,17 @@ __pycache__/
 
 # Editor
 .vscode/
-
-# Packages
-node_modules/
+*.project
 
 # Modcrafter
-content/
+lib/
 /Modcrafter.yml
 
 # Node
+node_modules/
 package.json
 run.js
 
 # Compiled files
-/bin/build/
-/bin/dist/*.yml
-/bin/dist/*.info
-/bin/*.spec
-
+/bin/**/*
+!/bin/dist/*.exe

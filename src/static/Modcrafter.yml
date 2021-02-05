@@ -1,7 +1,7 @@
 ## Modcrafter configuration file ##
 
 # Format is YAML https://yaml.org
-# YAML is like JSON but without braces, commas and unncessary quotes
+# YAML is like JSON but without braces, commas and unnecessary quotes
 # Comments start with hashes
 # Note that indentation is important
 
@@ -17,7 +17,7 @@ versions:
 mod:
   name: My Test Mod
   id: mytestmod # must be unique
-  version: v1.0 # set to "auto" to use automatic IDs instead
+  version: v0.0 # set to "auto" to use automatic IDs instead
   author: Myself
   description: |
     Describe your mod here,
@@ -41,7 +41,7 @@ blocks:
     itemForm: true
     textures: auto # single-textured cube
     hardness: 2.5
-    inventoryTab: misc
+    inventoryTab: new_blocks # add to a custom tab
     material: wood
     resistance: 6
     solid: true
@@ -51,9 +51,9 @@ blocks:
   world_only_block:
     name: Block Without Item Form
     itemForm: false
-    textures: # `$name` refers to the above value of `name`
-      bottom: $name_bottom
-      top: $name_top
+    textures: # $id is replaced with the ID of this block
+      bottom: $id_top
+      top: $id_top
     hardness: 4.8
     material: rock
     resistance: 12

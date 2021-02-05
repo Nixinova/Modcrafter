@@ -2,7 +2,7 @@
 
 import os
 
-MAIN_FOLDER = 'content/'
+MAIN_FOLDER = 'lib/'
 OUTPUT_FOLDER = MAIN_FOLDER + 'mod/'
 JAR_FOLDER = MAIN_FOLDER + 'jars/'
 TEXTURES_FOLDER = MAIN_FOLDER + 'textures/'

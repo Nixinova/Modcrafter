@@ -7,6 +7,7 @@ import shutil
 import requests
 
 from globals import *
+import logger
 import modfile
 
 
@@ -19,9 +20,15 @@ def download():
     zip_output = 'output.zip'
 
     # Download MDK
-    req = requests.get(url, allow_redirects=True)
+    req = None
+    failmsg = f'Failed to download MDK version "{version}". '
+    try:
+        req = requests.get(url, allow_redirects=True)
+    except ConnectionError as err:
+        logger.error(err, suppress=True)
+        logger.log(failmsg + 'Please try again.')
     if b"404 Not Found" in req.content:
-        error = f'Failed to download MDK version "{version}". This is most likely due to invalid configuration. Please try again.'
+        error = failmsg + 'This is most likely due to invalid configuration. Please try again.'
         raise FileNotFoundError(error)
     with open(zip_output, 'wb') as file:
         file.write(req.content)

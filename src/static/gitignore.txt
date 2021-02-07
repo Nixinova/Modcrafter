@@ -1,0 +1,11 @@
+
+# Mod build files
+.gradle/
+build/
+mdk_info/
+
+# Outputted jar files
+*.jar
+
+# Logs
+*.log

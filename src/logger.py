@@ -15,6 +15,8 @@ logfile = LOGS_FOLDER + 'Modcrafter_' + timestamp + '.log'
 def start():
     """Start logger"""
 
+    os.makedirs(LOGS_FOLDER, exist_ok=True)
+
     logging.basicConfig(
         filename=logfile,
         level=logging.DEBUG,
@@ -22,7 +24,7 @@ def start():
         datefmt='%Y-%m-%d_%H:%M:%S'
     )
     global logger
-    logger = logging.getLogger(__name__)
+    logger = logging.getLogger()
 
     print(f"--- Modcrafter {VERSION} ---")
     print('')
@@ -44,8 +46,9 @@ def log(msg):
     print(msg)
 
 
-def error(err):
+def error(err, suppress=False):
     """Log error to both output file and console"""
     print(f"Traceback logged to {logfile}")
     logger.exception(err)
-    raise err
+    if not suppress:
+        raise err

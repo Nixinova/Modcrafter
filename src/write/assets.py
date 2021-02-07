@@ -6,6 +6,7 @@ import shutil
 
 from globals import *
 import modfile
+from write.java import customTabs
 
 MODID = ''
 ASSETS_FOLDER = ''
@@ -41,10 +42,13 @@ def lang():
     content = {}
 
     for name, data in ITEMS.items():
-        content[f'item.{MODID}.{name}'] = f'{data["name"] or name}'
+        content[f'item.{MODID}.{name}'] = data['name'] or name
 
     for name, data in BLOCKS.items():
-        content[f'block.{MODID}.{name}'] = f'{data["name"] or name}'
+        content[f'block.{MODID}.{name}'] = data['name'] or name
+
+    for tab_id, name in customTabs.items():
+        content[f'itemGroup.{tab_id.lower()}'] = name
 
     with open(langfile, 'w') as file:
         file.write(json.dumps(content, indent=4))

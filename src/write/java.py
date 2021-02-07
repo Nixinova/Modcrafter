@@ -1,6 +1,7 @@
 """Write to Java file"""
 
 import os
+import re
 
 from globals import *
 import modfile
@@ -8,7 +9,7 @@ import modfile
 PACKAGE = ''
 FOLDER = ''
 
-customTabs = []
+customTabs = {}
 customTabsContent = '\n\t'
 tabIndex = 11
 
@@ -64,17 +65,11 @@ def prepare_blocks():
         resistance = getKey(data, "resistance")
         sound = getKey(data, "sound").upper()
         stackSize = itemForm and getKey(data, "stackSize") or 0
-        tab = itemForm and getKey(data, "inventoryTab").upper()
-
-        # Custom values
-        if tab != 'null' and tab not in preset("existingTabs"):
-            global customTabsContent
-            customTabsContent += create_tab(tab, 'ModBlocks.' + block.upper())
+        tab = itemForm and create_tab(data, 'ModBlocks.' + block.upper())
 
         # Configure enums
         sound = 'SoundType.' + (sound in preset("soundTypes") and sound or 'METAL')
         material = 'Material.' + (material in preset("validMaterials") and material or 'ROCK')
-        tab = itemForm and (tab in preset("existingTabs") and 'ItemGroup.'+ tab) or (tab in customTabs and 'ModTabs.'+ tab) or 'null'
 
         # Add constructor
         args = f'"{block}", {itemForm}, {solid}, {material}, {hardness}f, {resistance}f, {sound}, {stackSize}, {tab}'
@@ -94,14 +89,7 @@ def prepare_items():
 
         # Get values
         stackSize = getKey(data, "stackSize")
-        tab = getKey(data, "inventoryTab").upper()
-        # Custom values
-        if tab not in preset("existingTabs"):
-            global customTabsContent
-            customTabsContent += create_tab(tab, 'ModItems.' + item.upper())
-
-        # Configure enums
-        tab = (tab in preset("existingTabs") and 'ItemGroup.'+ tab) or (tab in customTabs and 'ModTabs.'+ tab) or 'null'
+        tab = create_tab(data, 'ModItems.' + item.upper())
 
         # Add constructor
         args = f'"{item}", {stackSize}, {tab}'
@@ -110,24 +98,45 @@ def prepare_items():
     return {"items": itemsContent}
 
 
-def create_tab(name, icon):
+def create_tab(data, icon):
     """Create custom inventory tab"""
 
-    if not name or name in customTabs:
-        return ''
-    customTabs.append(name)
+    name = getKey(data, "inventoryTab")
+    if not name:
+        return 'null'
+    
+    tab_id = re.sub(r'[^\w\d]', '_', name).upper()
+    tab_var = 'null'
+
+    print(1, tab_id, preset("existingTabs"))
+    print(2, tab_id, customTabs)
+    print(3, name, icon, tab_id, tab_var)
+    if tab_id in preset("existingTabs"):
+        tab_var = 'ItemGroup.' + tab_id
+        return tab_var
+    else:
+        tab_var = 'ModTabs.' + tab_id
+        if tab_id in customTabs:
+            return tab_var
+
+    customTabs[tab_id] = name
 
     global tabIndex
     tabIndex += 1
 
     content = f"""
-    public static final ItemGroup {name} = new ItemGroup({tabIndex}, "{name.lower()}") {{
+    public static final ItemGroup {tab_id.upper()} = new ItemGroup({tabIndex}, "{tab_id.lower()}") {{
         public ItemStack createIcon() {{
             return new ItemStack({icon});
         }}
     }};
     """
-    return content
+
+    global customTabsContent
+    customTabsContent += content
+
+    print(4,tab_var)
+    return tab_var
 
 
 def preset(name):

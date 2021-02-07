@@ -77,7 +77,8 @@ def mods_toml():
                 if not re.match(r'^\s*$', ln):
                     write.write(ln)
 
-            write.write('description=' + f'"""{modfile.get("description")}"""')
+            desc = re.sub(r'\r\n', '\n', modfile.get("description"))
+            write.write('description=' + f'"""{desc}"""')
 
     os.remove(mods_toml)
     os.rename(mods_toml_temp, mods_toml)

@@ -28,8 +28,8 @@ mod:
 
 ## Blocks and items ##
 
-# Certain parameters require specific values
-# See https://gist.github.com/Nixinova/4427f3e749a9c9e6b0bc430abc33564e
+# Certain parameters require specific values: see https://git.io/Jtat2
+# Textures go in folder 'lib/textures/'
 
 blocks:
 
@@ -41,7 +41,7 @@ blocks:
     itemForm: true
     textures: auto # single-textured cube
     hardness: 2.5
-    inventoryTab: new_blocks # add to a custom tab
+    inventoryTab: New Blocks # add to a custom tab
     material: wood
     resistance: 6
     solid: true
@@ -52,7 +52,6 @@ blocks:
     name: Block Without Item Form
     itemForm: false
     textures: # $id is replaced with the ID of this block
-      bottom: $id_top
       top: $id_top
     hardness: 4.8
     material: rock

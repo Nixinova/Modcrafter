@@ -8,13 +8,6 @@ __pycache__/
 # Modcrafter
 lib/
 logs/
-/Modcrafter.yml
-
-# Node
-node_modules/
-package.json
-run.js
-
-# Compiled files
 /bin/**/*
 !/bin/dist/*.exe
+/Modcrafter.yml

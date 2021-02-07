@@ -7,6 +7,7 @@ import yaml
 
 from globals import *
 import write.project as project
+import logger
 
 modfilename = 'Modcrafter.yml'
 modfile_content = {}
@@ -28,6 +29,7 @@ def read():
     default(False)
 
     if os.path.exists(modfilename):
+        logger.log('Reading mod config contents')
         with open(modfilename, 'r') as file:
             file_content = yaml.safe_load(file)
             if file_content:

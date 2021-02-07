@@ -5,9 +5,12 @@ import re
 
 from globals import *
 import modfile
+import logger
 
 PACKAGE = ''
 FOLDER = ''
+BLOCKS = {}
+ITEMS = {}
 
 customTabs = {}
 customTabsContent = '\n\t'
@@ -16,11 +19,23 @@ tabIndex = 11
 
 def write():
     """Write to Java files"""
+    logger.log('Writing Java files...')
 
     global PACKAGE, FOLDER
     PACKAGE = modfile.get('package')
     FOLDER = OUTPUT_FOLDER + 'src/main/java/' + PACKAGE.replace('.', '/') + '/'
     os.makedirs(FOLDER, exist_ok=True)
+
+    global BLOCKS, ITEMS
+    BLOCKS = modfile.get('blocks') or {}
+    ITEMS = modfile.get('items') or {}
+    
+    for key, val in BLOCKS.items():
+        if not val:
+            BLOCKS[key] = {}
+    for key, val in ITEMS.items():
+        if not val:
+            ITEMS[key] = {}
 
     write_file('Main.java', {})
     write_file('ModBlocks.java', prepare_blocks())
@@ -30,6 +45,7 @@ def write():
 
 def write_file(filename, cfg):
     """Write to Java file"""
+    logger.log(f' Finished writing to {filename}')
 
     # Read
     fc = ''
@@ -50,47 +66,70 @@ def write_file(filename, cfg):
 
 def prepare_blocks():
     """Configure mod blocks"""
+    logger.log(' Adding mod blocks...')
 
-    BLOCKS = modfile.get('blocks') or {}
     blocksContent = ''
 
     # Add blocks and block-items
     for block, data in BLOCKS.items():
+        logger.log(f'  Adding mod block {block}')
 
         # Get values
-        itemForm = getKey(data, "itemForm").lower()
-        solid = getKey(data, "solid").lower()
+        itemForm = getKey(data, "itemForm", bool=True)
+        translucent = getKey(data, "translucent", bool=True)
+        solid = getKey(data, "solid", bool=True)
         hardness = getKey(data, "hardness")
         resistance = getKey(data, "resistance")
-        stackSize = itemForm and getKey(data, "stackSize") or 0
         sound = 'SoundType.' + preset("soundTypes", getKey(data, "sound"))
         material = 'Material.' + preset("materials", getKey(data, "material"))
         mapColor = 'MaterialColor.' + preset("mapColors", getKey(data, "mapDisplay"))
-        tab = itemForm and create_tab(data, 'ModBlocks.' + block.upper())
 
         # Add constructor
-        args = f'"{block}", {itemForm}, {solid}, {material}, {mapColor}, {hardness}f, {resistance}f, {sound}, {stackSize}, {tab}'
-        blocksContent += f'\n\tpublic static final Block {block.upper()} = addBlock({args});'
+        blocksContent += (re.sub(r'(?m)^ +$\n|^ {8}', '', f"""
+            public static final Block {block.upper()} = addBlock(
+                "{block}",
+                new Block(AbstractBlock.Properties
+                    .create({material}, {mapColor})
+                    {hardness and f'.hardnessAndResistance({hardness}f, {resistance or 1}f)' or '.zeroHardnessAndResistance()'}
+                    .sound({sound})
+                    {translucent and '.notSolid()' or ''}
+                    {not solid and '.doesNotBlockMovement()' or ''}
+                )
+            );
+        """.rstrip()))
+
+        # Prepare item form
+        if itemForm != False:
+            ITEMS[block] = data
 
     return {"blocks": blocksContent}
 
 
 def prepare_items():
     """Configure mod items"""
+    logger.log(' Adding mod items...')
 
-    ITEMS = modfile.get('items') or {}
     itemsContent = ''
 
     # Add items
     for item, data in ITEMS.items():
+        logger.log(f'  Adding mod item {item}')
 
         # Get values
-        stackSize = getKey(data, "stackSize")
+        itemForm = getKey(data, 'itemForm', bool=True)
+        stackSize = getKey(data, 'stackSize') or '64'
         tab = create_tab(data, 'ModItems.' + item.upper())
 
         # Add constructor
-        args = f'"{item}", {stackSize}, {tab}'
-        itemsContent += f'\n\tpublic static final Item {item.upper()} = addItem({args});'
+        itemsContent += (re.sub(r'(?m)^ +$\n|^ {8}', '', f"""
+            public static final Item {item.upper()} = addItem(
+                "{item}",
+                {itemForm and f'ModBlocks.{item.upper()},' or ''}
+                new Item.Properties()
+                    .maxStackSize({stackSize})
+                    .group({tab})
+            );
+        """.rstrip()))
 
     return {"items": itemsContent}
 
@@ -98,12 +137,14 @@ def prepare_items():
 def create_tab(data, icon):
     """Create custom inventory tab"""
 
+    default = 'ItemGroup.MISC'
+
     name = getKey(data, "inventoryTab")
     if not name:
-        return 'null'
+        return default
 
     tab_id = re.sub(r'[^\w\d]', '_', name).upper()
-    tab_var = 'null'
+    tab_var = default
 
     if preset("existingTabs", tab_id, True):
         tab_var = 'ItemGroup.' + tab_id
@@ -112,6 +153,8 @@ def create_tab(data, icon):
         tab_var = 'ModTabs.' + tab_id
         if tab_id in customTabs:
             return tab_var
+        
+    logger.log(f'   Adding inventory tab {tab_id}')
 
     customTabs[tab_id] = name
 
@@ -124,7 +167,7 @@ def create_tab(data, icon):
             return new ItemStack({icon});
         }}
     }};
-    """
+    """.rstrip()
 
     global customTabsContent
     customTabsContent += content
@@ -176,10 +219,11 @@ def preset(mode, val, bool=False):
 
     val = val.upper()
     isValid = val in values[mode]
-    if (bool): return isValid
+    if (bool):
+        return isValid
     return isValid and val or defaults[mode]
 
 
-def getKey(data, key):
+def getKey(data, key, bool=False):
     """Key retrieval with edge guards"""
-    return key in data and str(data[key]) or ''
+    return key in data and data[key] or (False if bool else '')

@@ -20,41 +20,12 @@ import $PACKAGE.ModTabs;
 
 public class ModBlocks {
 
-    public static final DeferredRegister<Block> BLOCKS
-        = DeferredRegister.create(ForgeRegistries.BLOCKS, Main.MODID);
-    
-    //Blocks:$BLOCKS
+    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, Main.MODID);
 
-    public static Block addBlock(
-        String name,
-        boolean itemForm,
-        boolean solid,
-        Material material,
-        MaterialColor mapColor,
-        float hardness,
-        float resistance,
-        SoundType sound,
-        int stackSize, // block item only
-        ItemGroup group // block item only
-    ) {
-        // Register block
-        AbstractBlock.Properties blockProps = AbstractBlock.Properties.create(material, mapColor)
-            .hardnessAndResistance(hardness, resistance)
-            .sound(sound)
-            ;
-        if (!solid) blockProps = blockProps.notSolid();
-        Block block = new Block(blockProps);
+    // Blocks:$BLOCKS
+
+    private static Block addBlock(String name, Block block) {
         BLOCKS.register(name, () -> block);
-
-        // Register block item
-        Item.Properties itemProps = new Item.Properties()
-            .maxStackSize(stackSize)
-            .group(group)
-            ;
-        if (itemForm) {
-            ModItems.ITEMS.register(name, () -> new BlockItem(block, itemProps));
-        }
-
         return block;
     }
 

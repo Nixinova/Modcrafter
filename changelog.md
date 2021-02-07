@@ -1,10 +1,14 @@
 # Modcrafter Changelog
 
-## Next
-
+## 0.3
+*2021-02-07*
 - Added map display color field to blocks.
+- Added `solid` field to control whether the block stops entity movement.
 - Added error logger, while places log files in folder `logs/`.
-- Changed custom inventory tabs to allow setting a display name.
+- Changed parsing to allow blocks to be empty of fields.
+- Changed old `solid` field to `translucent` and inverted the value.
+- Fixed custom inventory tabs not allowing display names.
+- Fixed top and bottom faces of blocks being improperly set.
 
 ## 0.2
 *2021-02-06*

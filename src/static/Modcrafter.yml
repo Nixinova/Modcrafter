@@ -1,6 +1,6 @@
 ## Modcrafter configuration file ##
 
-# Format is YAML https://yaml.org
+# Format is YAML yaml.org
 # YAML is like JSON but without braces, commas and unnecessary quotes
 # Comments start with hashes
 # Note that indentation is important
@@ -9,8 +9,8 @@
 ## Version information ##
 
 versions:
-  minecraft: 1.16.4
-  forge: 35.1.4
+  minecraft: 1.16.5
+  forge: 36.0.15
 
 ## Mod information ##
 
@@ -23,43 +23,56 @@ mod:
     Describe your mod here,
     in as many lines as you need
   #license: All rights reserved # optional
-  #website: https://example.com # optional
-  #bugs: https://github.com/example/mod/issues # optional
+  #website: example.com # optional
+  #bugs: github.com/example/mod/issues # optional
 
 ## Blocks and items ##
 
-# Certain parameters require specific values: see https://git.io/Jtat2
+# Certain parameters require specific allowed values: see git.io/Jtat2
 # Textures go in folder 'lib/textures/'
 
 blocks:
 
   # Add your mod blocks below
-  # Two example blocks have been filled out for you
+  # All parameters are optional
+  # Four example blocks have been filled out for you
+
+  default_block: # all fields are set to their defaults, with explanations
+    name: default_block # defaults to ID
+    itemForm: true # when 'true', item form of this block is added to inventory
+    textures: auto # when 'auto', texture as a basic single-textured cube
+    solid: true # when 'true', blocks entity movement
+    translucent: false # when 'true', lets light through
+    hardness: 0 # when set, controls breaking time
+    resistance: 0 # when set, controls blast resistance
+    material: rock # controls tool material etc; requires an allowed value from git.io/Jtat2#file-material-txt
+    mapDisplay: stone # controls map color; requires an allowed value from git.io/Jtat2#file-mapdisplay
+    sound: metal # block sound; requires an allowed value from git.io/Jtat2#file-sound-txt
+    inventoryTab: Misc # where the item form of this block appears; if it does not match a value from git.io/Jtat2#file-inventorytab-txt a custom inventory tab is created
+    stackSize: 64 # maximum stack size
+
+  unset_block: # all fields are optional, defaulting to the values above
 
   example_block:
     name: Example Block
     itemForm: true
-    textures: auto # single-textured cube
     hardness: 2.5
     resistance: 6
     material: wood
     mapDisplay: wood
-    solid: true
     sound: wood
     inventoryTab: New Blocks # add to a custom tab
     stackSize: 16
 
   world_only_block:
     name: Block Without Item Form
-    itemForm: false
-    textures: # $id is replaced with the ID of this block
-      top: $id_top
+    textures: # '$id' is replaced with the ID of this block
+      up: $id_top
+      down: $id_top
+    solid: false
+    translucent: true
     hardness: 4.8
     resistance: 12
-    material: rock
-    mapDisplay: wood
-    solid: true
-    sound: metal
 
 items:
 
@@ -69,5 +82,5 @@ items:
   example_item:
     name: Example Item
     textures: auto # default 2D item
-    inventoryTab: misc # existing tab Miscellaneous
+    inventoryTab: Misc
     stackSize: 16

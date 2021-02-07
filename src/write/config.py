@@ -5,6 +5,7 @@ import re
 
 from globals import *
 import modfile
+import logger
 
 
 def write():
@@ -17,6 +18,7 @@ def write():
 
 def pack_mcmeta():
     """Configures pack.mcmeta"""
+    logger.log('Writing to pack.mcmeta')
 
     FOLDER = OUTPUT_FOLDER + 'src/main/resources/'
 
@@ -39,6 +41,7 @@ def pack_mcmeta():
 
 def mods_toml():
     """Configures mods.toml"""
+    logger.log('Writing to mods.toml')
 
     FOLDER = OUTPUT_FOLDER + 'src/main/resources/META-INF/'
 
@@ -86,6 +89,7 @@ def mods_toml():
 
 def build_gradle():
     """Configure build.gradle"""
+    logger.log('Writing to build.gradle')
 
     build_gradle = OUTPUT_FOLDER + 'build.gradle'
     build_gradle_temp = build_gradle + '.temp'

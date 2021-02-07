@@ -18,22 +18,28 @@ def download():
     version = modfile.get('minecraft') + '-' + modfile.get('forge')
     url = prefix + version + '/forge-' + version + '-mdk.zip'
     zip_output = 'output.zip'
+    failmsg = f'Failed to download Forge MDK version "{version}". '
 
     # Download MDK
     req = None
-    failmsg = f'Failed to download MDK version "{version}". '
+    logger.log(f'Downloading Forge MDK version {version}...')
+
     try:
         req = requests.get(url, allow_redirects=True)
     except ConnectionError as err:
         logger.error(err, suppress=True)
         logger.log(failmsg + 'Please try again.')
+
     if b"404 Not Found" in req.content:
         error = failmsg + 'This is most likely due to invalid configuration. Please try again.'
+        logger.error(error, suppress=True)
         raise FileNotFoundError(error)
+
     with open(zip_output, 'wb') as file:
         file.write(req.content)
 
     # Extract MDK
+    logger.log('Extracting downloaded MDK')
     shutil.rmtree(OUTPUT_FOLDER, ignore_errors=True)
     with zipfile.ZipFile(zip_output, 'r') as file:
         file.extractall(OUTPUT_FOLDER)

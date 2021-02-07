@@ -42,10 +42,10 @@ def lang():
     content = {}
 
     for name, data in ITEMS.items():
-        content[f'item.{MODID}.{name}'] = data['name'] or name
+        content[f'item.{MODID}.{name}'] = getKey(data, 'name') or name
 
     for name, data in BLOCKS.items():
-        content[f'block.{MODID}.{name}'] = data['name'] or name
+        content[f'block.{MODID}.{name}'] = getKey(data, 'name') or name
 
     for tab_id, name in customTabs.items():
         content[f'itemGroup.{tab_id.lower()}'] = name
@@ -81,7 +81,7 @@ def models():
 
     for name, data in BLOCKS.items():
         content = {}
-        textures = data["textures"]
+        textures = getKey(data, 'textures') or 'auto'
         default = f'{MODID}:block/{name}'
 
         if isinstance(textures, str):
@@ -97,8 +97,8 @@ def models():
 
             content = {"parent": "block/cube", "textures": {
                 "particle": setTexture('particle'),
-                "top": setTexture('top'),
-                "bottom": setTexture('bottom'),
+                "up": setTexture('up'),
+                "down": setTexture('down'),
                 "north": setTexture('north'),
                 "south": setTexture('south'),
                 "east": setTexture('east'),
@@ -116,3 +116,8 @@ def textures():
 
     if os.path.exists(TEXTURES_FOLDER):
         shutil.copytree(TEXTURES_FOLDER, ASSETS_FOLDER + 'textures/', dirs_exist_ok=True)
+
+
+def getKey(data, key):
+    """Key retrieval with edge guards"""
+    return key in data and data[key] or ''

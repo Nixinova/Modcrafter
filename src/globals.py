@@ -2,7 +2,7 @@
 
 import os
 
-VERSION = '0.2_next'
+VERSION = '0.3'
 
 MAIN_FOLDER = 'lib/'
 OUTPUT_FOLDER = MAIN_FOLDER + 'mod/'

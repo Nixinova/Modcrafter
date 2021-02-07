@@ -1,6 +1,7 @@
 """Write meta project files"""
 
 import os
+import re
 
 from globals import *
 import logger
@@ -15,25 +16,32 @@ message = (
 
 def init():
     """Initialise project"""
-
-    logger.log('Initialising project.')
+    logger.log('Initialising project')
 
     os.makedirs(TEXTURES_FOLDER, exist_ok=True)
 
     with open(modfile.modfilename, 'w') as file:
         file.write(modfile.default(True))
 
-    with open('READ_ME.log', 'w') as file:
-        file.write(message + 'You may delete this file.')
+    with open('README.log', 'w') as file:
+        file.write(message + '\nYou may delete this file.')
 
-    gitignore_content = ''
     if not os.path.exists('.gitignore'):
         open('.gitignore', 'w').close()
-    with open(STATIC_PATH + 'gitignore.txt', 'r') as file:
-        gitignore_content = file.read()
     with open('.gitignore', 'r+') as file:
         file.read()
-        file.write(gitignore_content)
+        file.write(re.sub(r'(?m)^ {12}', '', """
+            # Mod build files
+            .gradle/
+            build/
+            mdk_info/
 
-    #logger.close()
+            # Outputted jar files
+            *.jar
+
+            # Logs
+            *.log
+        """.rstrip()))
+
+    logger.close()
     raise SystemExit(message)

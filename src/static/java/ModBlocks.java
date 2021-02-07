@@ -5,6 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialColor;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -29,6 +30,7 @@ public class ModBlocks {
         boolean itemForm,
         boolean solid,
         Material material,
+        MaterialColor mapColor,
         float hardness,
         float resistance,
         SoundType sound,
@@ -36,7 +38,7 @@ public class ModBlocks {
         ItemGroup group // block item only
     ) {
         // Register block
-        AbstractBlock.Properties blockProps = AbstractBlock.Properties.create(material)
+        AbstractBlock.Properties blockProps = AbstractBlock.Properties.create(material, mapColor)
             .hardnessAndResistance(hardness, resistance)
             .sound(sound)
             ;

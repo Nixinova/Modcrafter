@@ -60,19 +60,16 @@ def prepare_blocks():
         # Get values
         itemForm = getKey(data, "itemForm").lower()
         solid = getKey(data, "solid").lower()
-        material = getKey(data, "material").upper()
         hardness = getKey(data, "hardness")
         resistance = getKey(data, "resistance")
-        sound = getKey(data, "sound").upper()
         stackSize = itemForm and getKey(data, "stackSize") or 0
+        sound = 'SoundType.' + preset("soundTypes", getKey(data, "sound"))
+        material = 'Material.' + preset("materials", getKey(data, "material"))
+        mapColor = 'MaterialColor.' + preset("mapColors", getKey(data, "mapDisplay"))
         tab = itemForm and create_tab(data, 'ModBlocks.' + block.upper())
 
-        # Configure enums
-        sound = 'SoundType.' + (sound in preset("soundTypes") and sound or 'METAL')
-        material = 'Material.' + (material in preset("validMaterials") and material or 'ROCK')
-
         # Add constructor
-        args = f'"{block}", {itemForm}, {solid}, {material}, {hardness}f, {resistance}f, {sound}, {stackSize}, {tab}'
+        args = f'"{block}", {itemForm}, {solid}, {material}, {mapColor}, {hardness}f, {resistance}f, {sound}, {stackSize}, {tab}'
         blocksContent += f'\n\tpublic static final Block {block.upper()} = addBlock({args});'
 
     return {"blocks": blocksContent}
@@ -104,14 +101,11 @@ def create_tab(data, icon):
     name = getKey(data, "inventoryTab")
     if not name:
         return 'null'
-    
+
     tab_id = re.sub(r'[^\w\d]', '_', name).upper()
     tab_var = 'null'
 
-    print(1, tab_id, preset("existingTabs"))
-    print(2, tab_id, customTabs)
-    print(3, name, icon, tab_id, tab_var)
-    if tab_id in preset("existingTabs"):
+    if preset("existingTabs", tab_id, True):
         tab_var = 'ItemGroup.' + tab_id
         return tab_var
     else:
@@ -135,19 +129,30 @@ def create_tab(data, icon):
     global customTabsContent
     customTabsContent += content
 
-    print(4,tab_var)
     return tab_var
 
 
-def preset(name):
+def preset(mode, val, bool=False):
     """Variables"""
 
-    cfg = {
-        "validMaterials": [
+    values = {
+        "materials": [
             "AIR", "ANVIL", "BARRIER", "CACTUS", "CAKE", "CARPET", "CIRCUITS", "CLAY", "CLOTH",
             "CORAL", "CRAFTED_SNOW", "DRAGON_EGG", "FIRE", "GLASS", "GOURD", "GRASS", "GROUND",
             "ICE", "IRON", "LAVA", "LEAVES", "PACKED_ICE", "PISTON", "PLANTS", "PORTAL",
             "REDSTONE_LIGHT", "ROCK", "SAND", "SNOW", "SPONGE", "TNT", "VINE", "WATER", "WEB", "WOOD"
+        ],
+        "mapColors": [
+            "ADOBE", "AIR", "BLACK", "BLACK_TERRACOTTA", "BLUE", "BLUE_TERRACOTTA", "BROWN",
+            "BROWN_TERRACOTTA", "CLAY", "CRIMSON_HYPHAE", "CRIMSON_NYLIUM", "CRIMSON_STEM", "CYAN",
+            "CYAN_TERRACOTTA", "DIAMOND", "DIRT", "EMERALD", "FOLIAGE", "GOLD", "GRASS", "GRAY",
+            "GRAY_TERRACOTTA", "GREEN", "GREEN_TERRACOTTA", "ICE", "IRON", "LAPIS", "LIGHT_BLUE",
+            "LIGHT_BLUE_TERRACOTTA", "LIGHT_GRAY", "LIGHT_GRAY_TERRACOTTA", "LIME",
+            "LIME_TERRACOTTA", "MAGENTA", "MAGENTA_TERRACOTTA", "NETHERRACK", "OBSIDIAN",
+            "ORANGE_TERRACOTTA", "PINK", "PINK_TERRACOTTA", "PURPLE", "PURPLE_TERRACOTTA", "QUARTZ",
+            "RED", "RED_TERRACOTTA", "SAND", "SNOW", "STONE", "TNT", "WARPED_HYPHAE",
+            "WARPED_NYLIUM", "WARPED_STEM", "WARPED_WART", "WATER", "WHITE_TERRACOTTA", "WOOD",
+            "WOOL", "YELLOW", "YELLOW_TERRACOTTA"
         ],
         "existingTabs": [
             "BREWING", "BUILDING_BLOCKS", "COMBAT", "DECORATIONS", "FOOD", "HOTBAR", "INVENTORY",
@@ -163,7 +168,16 @@ def preset(name):
             "SWEET_BERRY_BUSH", "VINE", "WART", "WET_GRASS", "WOOD"
         ]
     }
-    return cfg[name]
+    defaults = {
+        "materials": "ROCK",
+        "mapColors": "STONE",
+        "soundTypes": "METAL"
+    }
+
+    val = val.upper()
+    isValid = val in values[mode]
+    if (bool): return isValid
+    return isValid and val or defaults[mode]
 
 
 def getKey(data, key):

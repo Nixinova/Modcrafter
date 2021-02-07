@@ -41,11 +41,12 @@ blocks:
     itemForm: true
     textures: auto # single-textured cube
     hardness: 2.5
-    inventoryTab: New Blocks # add to a custom tab
-    material: wood
     resistance: 6
+    material: wood
+    mapDisplay: wood
     solid: true
     sound: wood
+    inventoryTab: New Blocks # add to a custom tab
     stackSize: 16
 
   world_only_block:
@@ -54,8 +55,9 @@ blocks:
     textures: # $id is replaced with the ID of this block
       top: $id_top
     hardness: 4.8
-    material: rock
     resistance: 12
+    material: rock
+    mapDisplay: wood
     solid: true
     sound: metal
 
@@ -67,5 +69,5 @@ items:
   example_item:
     name: Example Item
     textures: auto # default 2D item
-    inventoryTab: misc
+    inventoryTab: misc # existing tab Miscellaneous
     stackSize: 16

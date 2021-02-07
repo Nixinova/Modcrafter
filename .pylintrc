@@ -4,10 +4,12 @@ init-hook="from pylint.config import find_pylintrc; import os, sys; sys.path.app
 [MESSAGES CONTROL]
 disable=
     bare-except,
+    broad-except,
     cell-var-from-loop,
     global-at-module-level,
     global-statement,
     invalid-name,
+    logging-fstring-interpolation,
     redefined-outer-name,
     report-unbound-variable,
     unused-wildcard-import,

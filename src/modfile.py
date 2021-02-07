@@ -39,22 +39,27 @@ def read():
 def init():
     """Initialise project"""
 
-    message = 'Successfully initialised Modcrafter project.\n'
-    message += 'Configure Modcrafter.yml then run this EXE file again to compile to a JAR.\n'
+    message = f"""
+        Successfully initialised Modcrafter project.
+        Configure Modcrafter.yml then run this EXE file again to compile to a JAR.
+        Make sure to put any custom textures into {TEXTURES_FOLDER} before running the EXE.
+        """.strip()
     os.mkdir(MAIN_FOLDER)
     os.mkdir(TEXTURES_FOLDER)
     with open(modfilename, 'w') as file:
         file.write(default(True))
-    with open('INITIALISED.info', 'w') as file:
+    with open('INITIALISED.log', 'w') as file:
         file.write(message + 'You may delete this file.\n')
+    if not os.path.exists('.gitignore'):
+        open('.gitignore', 'w').close()
     with open('.gitignore', 'r+') as file:
         file.read()
-        file.write(
-            '\n' '# Ignore Modcrafter output directory'
-            '\n' f'{MAIN_FOLDER}'
-            '\n' '# Ignore info files'
-            '\n' '*.info'
-        )
+        file.write(f"""
+            # Ignore Modcrafter output directory
+            {MAIN_FOLDER}
+            # Ignore log files
+            *.log
+        """.strip())
     raise SystemExit(message)
 
 

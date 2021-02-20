@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
+/* Base elements */
+html {min-height: 100vh; font-family: 'Open Sans', sans-serif; background: linear-gradient(30deg, #222, #333); color: #eee; line-height: 1.5;}
+body {margin: 4em;}
+h1 {text-align: center;}
+form {margin-left: 2em;}
+p {margin-left: 1em;}
+a {color: lightblue; text-decoration: none;}
+
+/* Form elements */
+input, select, button, textarea {padding: 5px 8px; border: 1px solid #ddd;}
+label {display: inline-block; width: 120px;}
+input + span {margin-left: 1em; font-style: italic;}
+input:invalid, .invalid {background: pink;}
+input {width: 140px;}
+input[type="checkbox"] {border: none; text-align: center; appearance: none; cursor: pointer;}
+input[type="checkbox"]::after {padding: 6px 12px; border-radius: 5px;}
+input[type="checkbox"]:not(:checked)::after {content: 'No'; background: pink;}
+input[type="checkbox"]:checked::after {content: 'Yes'; background: lightgreen;}
+textarea {display: block; height: 60px; width: 320px;}
+button {min-height: 24px; min-width: 24px; border: 2px solid #444; border-radius: 5px; background: #afafaf; vertical-align: middle; cursor: pointer;}
+
+
+/* Blocks and items */
+.list div {display: inline-block; margin: 0 2em 2em 0; padding: 1em 2em; vertical-align: top; border: 2px solid #ddd;}
+.list div p {margin-left: 0;}
+.list div>button {position: absolute; margin-left: -2em; margin-top: -12px;}
+
+/* Buttons variants */
+button[class] {width: 80px;}
+.yes {background: lightgreen;}
+.yes::after {content: 'Yes';}
+.no {background: pink;}
+.no::after {content: 'No';}
+
+/* Help section */
+#help strong {display: block;}
+#help :target {border-left: 3px solid gray;}
+#help table {margin-left: 2em; border-collapse: collapse;}
+#help table * {padding: 3px 6px; text-align: center;}
+#help table td {border: 1px solid; }
+
+/* Hiding */
+.hide {display: none !important;}
+
+/* Copyright © Nixinova 2021 */

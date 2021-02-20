@@ -6,6 +6,7 @@ disable=
     bare-except,
     broad-except,
     cell-var-from-loop,
+    consider-using-ternary,
     global-at-module-level,
     global-statement,
     invalid-name,

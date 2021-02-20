@@ -39,9 +39,10 @@ def init():
             # Outputted jar files
             *.jar
 
-            # Logs
+            # Modcrafter runtime
+            *.exe
             *.log
-        """.rstrip()))
+        """))
 
     logger.close()
     raise SystemExit(message)

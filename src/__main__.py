@@ -1,23 +1,22 @@
 """Modcrafter"""
 
-import modfile
-import download as mdk
-import write as files
-import compile as compiler
-import logger
+import gui.gui as gui
+import runner
 from globals import *
+
+
+def ui():
+    """Open Modcrafter GUI"""
+    gui.run()
+
 
 def run():
     """Run Modcrafter"""
-    logger.start()
-    modfile.read()
-    mdk.download()
-    files.configure()
-    compiler.run()
-    logger.close()
+    runner.run()
 
 
-try:
-    run()
-except Exception as err:
-    logger.error(err)
+ui()
+# try:
+#    run()
+# except Exception as err:
+#    logger.error(err)

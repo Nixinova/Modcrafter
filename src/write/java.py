@@ -29,7 +29,7 @@ def write():
     global BLOCKS, ITEMS
     BLOCKS = modfile.get('blocks') or {}
     ITEMS = modfile.get('items') or {}
-    
+
     for key, val in BLOCKS.items():
         if not val:
             BLOCKS[key] = {}
@@ -99,7 +99,7 @@ def prepare_blocks():
         """.rstrip()))
 
         # Prepare item form
-        if itemForm != False:
+        if itemForm:
             ITEMS[block] = data
 
     return {"blocks": blocksContent}
@@ -153,7 +153,7 @@ def create_tab(data, icon):
         tab_var = 'ModTabs.' + tab_id
         if tab_id in customTabs:
             return tab_var
-        
+
     logger.log(f'   Adding inventory tab {tab_id}')
 
     customTabs[tab_id] = name
@@ -219,7 +219,7 @@ def preset(mode, val, bool=False):
 
     val = val.upper()
     isValid = val in values[mode]
-    if (bool):
+    if bool:
         return isValid
     return isValid and val or defaults[mode]
 

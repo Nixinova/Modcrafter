@@ -5,9 +5,10 @@ __pycache__/
 .vscode/
 *.project
 
-# Modcrafter
-lib/
-logs/
+# Source
+example/
+
+# Compiled
+*.exe
 /bin/**/*
-!/bin/dist/*.exe
-/Modcrafter.yml
+!/bin/dist/Modcrafter.exe

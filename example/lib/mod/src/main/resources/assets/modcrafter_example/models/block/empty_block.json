@@ -1,0 +1,6 @@
+{
+    "parent": "minecraft:block/cube_all",
+    "textures": {
+        "all": "modcrafter_example:block/world_only_block"
+    }
+}

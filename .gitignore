@@ -5,8 +5,9 @@ __pycache__/
 .vscode/
 *.project
 
-# Source
-example/
+# Project
+*gradle*
+!build.gradle
 
 # Compiled
 *.exe

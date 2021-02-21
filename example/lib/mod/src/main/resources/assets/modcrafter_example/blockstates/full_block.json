@@ -1,0 +1,7 @@
+{
+    "variants": {
+        "": {
+            "model": "modcrafter_example:block/full_block"
+        }
+    }
+}

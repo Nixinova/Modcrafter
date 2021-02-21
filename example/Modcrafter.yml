@@ -1,0 +1,51 @@
+
+version:
+  forge: 36.0.41
+  minecraft: 1.16.5
+  modcrafter: '0.5'
+
+mod:
+  author: Nixinova
+  description: "An example mod\nto test Modcrafter"
+  id: modcrafter_example
+  license: ISC
+  name: Modcrafter Example
+  version: '1.0'
+  website: https://github.com/Nixinova/Modcrafter
+
+blocks:
+  empty_block:
+    hardness: ''
+    inventoryTab: ''
+    mapDisplay: ''
+    material: ''
+    name: New Block
+    resistance: ''
+    sound: ''
+    stackSize: ''
+    textures: world_only_block
+  full_block:
+    hardness: 1.5
+    inventoryTab: Custom
+    itemForm: true
+    mapDisplay: stone
+    material: rock
+    name: New Block
+    resistance: 6
+    solid: true
+    sound: metal
+    stackSize: 12
+    textures: example_block
+    translucent: true
+
+items:
+  half_item:
+    inventoryTab: Custom
+    name: Half Item
+    stackSize: 32
+    textures: regular_item
+  regular_item:
+    inventoryTab: misc
+    name: Regular  Item
+    stackSize: 64
+    textures: auto

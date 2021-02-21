@@ -1,0 +1,10 @@
+modLoader="javafml"
+loaderVersion="[36,)"
+license="ISC"
+[[mods]]
+modId="modcrafter_example"
+version="${file.jarVersion}"
+displayName="Example Mod"
+authors="Nixinova"
+description="""An example mod
+to test Modcrafter"""

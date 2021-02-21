@@ -1,0 +1,8 @@
+{
+    "item.modcrafter_example.half_item": "Half Item",
+    "item.modcrafter_example.regular_item": "Regular  Item",
+    "item.modcrafter_example.full_block": "New Block",
+    "block.modcrafter_example.empty_block": "New Block",
+    "block.modcrafter_example.full_block": "New Block",
+    "itemGroup.custom": "Custom"
+}

@@ -11,14 +11,17 @@ commands = {
         python src/__main__.py
         """,
     "gui": """
-        python src/gui/__main__.py
+        cd example
+        &&
+        python ../src/app.py
         """,
     "jar": """
         python src/compile.py
         """,
     "compile": """
         cd bin
-        && pyinstaller ../src/__main__.py
+        &&
+        pyinstaller ../src/__main__.py
             --name Modcrafter
             --add-data ../src/static;static
             --add-data ../src/gui;gui

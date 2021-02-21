@@ -1,5 +1,10 @@
 # Modcrafter Changelog
 
+## 0.5
+*2021-02-21*
+- Added support for reading from an existing configuration file to initialise the program.
+- Fixed block textures being missing when the `texture` field is set to a string.
+
 ## 0.4
 *2021-02-20*
 - Added GUI for creating and compiling mods.

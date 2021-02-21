@@ -74,8 +74,14 @@ def models():
     os.makedirs(MODELS_FOLDER + 'block/', exist_ok=True)
     os.makedirs(MODELS_FOLDER + 'item/', exist_ok=True)
 
-    for name, _ in ITEMS.items():
-        content = {"parent": "minecraft:item/generated", "textures": {"layer0": f"{MODID}:item/{name}"}}
+    for name, data in ITEMS.items():
+        texture = getKey(data, 'textures') or 'auto'
+        if texture == 'auto':
+            texture = f'{MODID}:item/{name}'
+        elif not ':' in texture:
+            texture = MODID + ('/' in texture and ':' or ':item/') + texture
+        content = {"parent": "minecraft:item/generated", "textures": {"layer0": texture}}
+
         with open(MODELS_FOLDER + 'item/' + name + '.json', 'w') as file:
             file.write(json.dumps(content, indent=4))
 
@@ -85,7 +91,9 @@ def models():
         default = f'{MODID}:block/{name}'
 
         if isinstance(textures, str):
-            texture = default if textures == 'auto' else textures
+            texture = textures == 'auto' and default or textures
+            if not ':' in texture:
+                texture = MODID + ('/' in texture and ':' or ':block/') + texture
             content = {"parent": "minecraft:block/cube_all", "textures": {"all": texture}}
         else:
             nameReplacement = f'{MODID}:block/{name}'

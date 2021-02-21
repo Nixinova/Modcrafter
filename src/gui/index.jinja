@@ -14,9 +14,11 @@
 
     <h1>Modcrafter {VERSION}</h1>
 
-    {% include "parts/form.html" %}
+    {% include "parts/form.jinja" %}
     <br><hr>
     {% include "parts/help.html" %}
+
+    <template id="config">{CONFIG}</template>
 
 </body>
 

@@ -22,8 +22,15 @@ def index():
     for file in files:
         app.send_static_file(file)
 
+    config = {}
+
+    if os.path.exists('Modcrafter.yml'):
+        with open('Modcrafter.yml', 'r') as file:
+            config = yaml.safe_load(file.read())
+
     html = render_template('index.jinja')
-    html  = html.replace('{VERSION}', VERSION)
+    html = html.replace('{VERSION}', VERSION)
+    html = html.replace('{CONFIG}', str(config))
     return html
 
 
@@ -31,8 +38,8 @@ def index():
 def process():
     """Complete form input"""
 
-    args = request.args.to_dict()
-    config = {'version': {}, 'mod': {}, 'blocks': {}, 'items': {}}
+    args = request.form.to_dict()
+    config = {'version': {'modcrafter': VERSION}, 'mod': {}, 'blocks': {}, 'items': {}}
 
     lastID = ''
     for arg, val in args.items():
@@ -53,12 +60,12 @@ def process():
         elif section in config:
             config[section][key] = val
 
-    yaml_content = re.sub(r' {8}', '', f"""
+    yaml_content = re.sub(r' {8}|\\r', '', f"""
         {yaml.dump({'version': config['version']})}
         {yaml.dump({'mod': config['mod']})}
         {yaml.dump({'blocks': config['blocks']})}
         {yaml.dump({'items': config['items']})}
-    """)
+    """.rstrip())
 
     with open('Modcrafter.yml', 'w') as file:
         file.write(yaml_content)
